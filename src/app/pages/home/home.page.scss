@@ -1,0 +1,35 @@
+.form-nova-tarefa {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.resumo {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lista-vazia {
+  color: var(--ion-color-medium);
+  text-align: center;
+  margin-top: 32px;
+}
+
+.conteudo-tarefa {
+  h2 {
+    font-weight: 600;
+  }
+
+  &.concluida h2 {
+    text-decoration: line-through;
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-item ion-button {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  font-size: 0.75rem;
+}

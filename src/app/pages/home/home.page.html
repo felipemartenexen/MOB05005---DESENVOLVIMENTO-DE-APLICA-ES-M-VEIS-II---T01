@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>TODO! CRUD</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="limparConcluidas()" title="Excluir todas as concluidas">
+        <ion-icon slot="icon-only" name="checkmark-done-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar color="primary">
+    <ion-segment [value]="filtro()" (ionChange)="alterarFiltro($any($event).detail.value)">
+      <ion-segment-button value="todas">
+        <ion-label>Todas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="pendentes">
+        <ion-label>Pendentes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="concluidas">
+        <ion-label>Concluidas</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- CREATE: campo de texto + botao adicionar -->
+  <div class="form-nova-tarefa">
+    <ion-input
+      label="Nova tarefa"
+      labelPlacement="floating"
+      fill="outline"
+      placeholder="Ex.: Fazer compras"
+      [ngModel]="novoTitulo()"
+      (ngModelChange)="novoTitulo.set($event)"
+      (keyup.enter)="adicionarTarefa()"
+    ></ion-input>
+
+    <ion-button expand="block" (click)="adicionarTarefa()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Adicionar
+    </ion-button>
+  </div>
+
+  <div class="resumo">
+    <ion-badge color="warning">Pendentes: {{ totalPendentes() }}</ion-badge>
+    <ion-badge color="success">Concluidas: {{ totalConcluidas() }}</ion-badge>
+  </div>
+
+  <!-- READ: lista das tarefas -->
+  @if (tarefasVisiveis().length === 0) {
+    <p class="lista-vazia">Nenhuma tarefa por aqui. Adicione a primeira acima.</p>
+  } @else {
+    <ion-list>
+      @for (tarefa of tarefasVisiveis(); track tarefa.id) {
+        <ion-item lines="full">
+          <!-- UPDATE: alterna concluida/pendente -->
+          <ion-checkbox
+            slot="start"
+            [checked]="tarefa.concluida"
+            (ionChange)="alternarConclusao(tarefa)"
+            aria-label="Concluir tarefa"
+          ></ion-checkbox>
+
+          <ion-label class="conteudo-tarefa" [class.concluida]="tarefa.concluida">
+            <h2>{{ tarefa.titulo }}</h2>
+            @if (tarefa.descricao) {
+              <p>{{ tarefa.descricao }}</p>
+            }
+            <ion-note>Atualizada em {{ tarefa.atualizadaEm | date: 'dd/MM/yyyy HH:mm' }}</ion-note>
+          </ion-label>
+
+          <!-- UPDATE e DELETE: botoes de acao do item -->
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="primary"
+            (click)="editarTarefa(tarefa)"
+            title="Editar tarefa"
+          >
+            <ion-icon slot="start" name="create-outline"></ion-icon>
+            EDITAR
+          </ion-button>
+
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="danger"
+            (click)="excluirTarefa(tarefa)"
+            title="Excluir tarefa"
+          >
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            EXCLUIR
+          </ion-button>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>
